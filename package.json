@@ -1,0 +1,15 @@
+{
+  "name": "x-quick-block",
+  "version": "0.1.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "description": "Local Chrome extension that adds one-click account blocking on x.com while Block mode is active in a tab.",
+  "scripts": {
+    "test": "node --test test/content.test.js test/background.test.js test/package.test.js",
+    "icons": "node tools/make-icons.js",
+    "package": "npm test && node tools/package.js"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

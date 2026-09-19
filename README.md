@@ -1,13 +1,13 @@
 # X Quick Block
 
-**One click to block an account on X. An early beta for friends, not a finished product.**
+**One click to block an account on X. An early beta, not a finished product.**
 
 > **Expect bugs.** X changes its interface frequently, and this extension may
 > miss controls, look odd, or fail to complete a block. Please
 > [report problems](https://github.com/gaurav-ketkar/x-quick-block/issues/new?template=bug_report.md)
 > so we can improve it. Use it only if you are comfortable trying beta software.
 
-Turn on Block mode and supported posts get a **Block @handle** button.
+Turn on Block mode and supported posts get a **`Block @handle`** button.
 Click it once: the extension opens X's menu and confirms the block for you.
 No repeated trips through menus.
 
@@ -18,8 +18,10 @@ use X's own controls to unblock someone.
 
 ## Install the beta
 
-You need desktop Chrome, an X account, and an invitation to this private
-GitHub repository. Accept the invitation and sign in to GitHub first.
+You need desktop Chrome and an X account. No GitHub account or invitation
+is needed to download the public release.
+
+**[Download the 0.1.0 Beta ZIP](https://github.com/gaurav-ketkar/x-quick-block/releases/download/v0.1.0-beta.1/x-quick-block-0.1.0.zip)**
 
 1. Open [Releases](https://github.com/gaurav-ketkar/x-quick-block/releases).
 2. Download **`x-quick-block-0.1.0.zip`** from the Beta release's **Assets**.
@@ -37,7 +39,7 @@ work or school browsers may not allow unpacked extensions.
 ## Use it
 
 1. On an X tab, click the extension icon. An **ON** badge means Block mode is active.
-2. Find a post by the account you want to block and click **Block @handle**.
+2. Find a post by the account you want to block and click **`Block @handle`**.
 3. The extension operates X's menu and confirmation. The confirmation may
    appear briefly, but you should not need to click it yourself.
 4. Click the extension icon again to remove the buttons.
@@ -78,8 +80,9 @@ Chrome versions, operating system, X theme/language, steps, and exact error.
 Screenshots help, but redact names, private posts, messages, and account details.
 Never attach passwords, cookies, access tokens, or a full page export.
 
-Reports in this private repo are visible to its collaborators, not just the
-maintainer. For suggestions, [open an issue](https://github.com/gaurav-ketkar/x-quick-block/issues).
+**Issues and attachments are public and visible to anyone.** You need a
+GitHub account to submit a report, but not to download the extension.
+For suggestions, [open an issue](https://github.com/gaurav-ketkar/x-quick-block/issues).
 
 ## Privacy and permissions
 
@@ -139,7 +142,7 @@ commercial advantage, or include it in a commercial product or service
 without prior written permission from Gaurav Ketkar. Modified versions
 must retain the notices and restrictions.
 
-This is **source-available, not open-source software**. Access to a private
-repository does not transfer ownership.
+This is **source-available, not open-source software**. Public access does
+not transfer ownership or grant permission for commercial use.
 
 X Quick Block is independent and is not affiliated with or endorsed by X.

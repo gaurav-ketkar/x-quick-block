@@ -54,6 +54,7 @@ function makeChromeMock({ insertCSSFails = false, executeScriptFails = false, se
       onRemoved: { addListener: (fn) => listeners.onRemoved.push(fn) },
     },
     runtime: {
+      id: "xqb-extension-id",
       onMessage: { addListener: (fn) => listeners.onMessage.push(fn) },
     },
   };
@@ -162,17 +163,20 @@ test("runtime.onMessage listener updates the sender tab's badge on xqb:setBadge"
   loadBackground(chrome);
 
   assert.equal(listeners.onMessage.length, 1);
-  listeners.onMessage[0]({ type: "xqb:setBadge", active: true }, { tab: { id: 11 } });
+  const sender = { id: "xqb-extension-id", url: "https://x.com/home", tab: { id: 11 } };
+  listeners.onMessage[0]({ type: "xqb:setBadge", active: true }, sender);
   assert.deepEqual(calls.setBadgeText[calls.setBadgeText.length - 1], { tabId: 11, text: "ON" });
 
-  listeners.onMessage[0]({ type: "xqb:setBadge", active: false }, { tab: { id: 11 } });
+  listeners.onMessage[0]({ type: "xqb:setBadge", active: false }, sender);
   assert.deepEqual(calls.setBadgeText[calls.setBadgeText.length - 1], { tabId: 11, text: "" });
 
-  // Messages without a sender tab, or of a different type, must not throw
-  // or touch the badge.
+  // Messages without a sender tab, of a different type, from another
+  // extension, or from a frame outside x.com must not touch the badge.
   const before = calls.setBadgeText.length;
   listeners.onMessage[0]({ type: "xqb:setBadge", active: true }, {});
-  listeners.onMessage[0]({ type: "other" }, { tab: { id: 11 } });
+  listeners.onMessage[0]({ type: "other" }, sender);
+  listeners.onMessage[0]({ type: "xqb:setBadge", active: true }, { ...sender, id: "other-extension" });
+  listeners.onMessage[0]({ type: "xqb:setBadge", active: true }, { ...sender, url: "https://evil.example/" });
   assert.equal(calls.setBadgeText.length, before);
 });
 

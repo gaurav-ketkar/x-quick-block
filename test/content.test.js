@@ -464,6 +464,30 @@ test("menu timeout: Block item never appears -> failed, nothing submitted", asyn
   a.stop();
 });
 
+test("a stale menu left open elsewhere is never used, even if it has a Block item", async () => {
+  const dom = setup();
+  const counters = installFakeX(dom, { openMenu: false });
+  const { document } = dom.window;
+  const stale = document.createElement("div");
+  stale.setAttribute("role", "menu");
+  const staleItem = document.createElement("button");
+  staleItem.setAttribute("data-testid", "blockUser");
+  staleItem.textContent = "Block @someoneelse";
+  stale.appendChild(staleItem);
+  document.body.appendChild(stale);
+
+  const a = api(dom);
+  a.start();
+  const button = document.querySelector("article[data-testid='tweet'] button[data-xqb-block]");
+  button.click();
+  await until(() => !a.state.busy);
+
+  assert.equal(counters.menuItems, 0, "stale Block item must not be clicked");
+  assert.equal(counters.confirms, 0);
+  assert.match(toast(dom).textContent, /never appeared/i);
+  a.stop();
+});
+
 test("uncertain: confirmation sent but no blocked proof -> surfaces uncertainty", async () => {
   const dom = setup();
   installFakeX(dom, { dialogNames: "spammer8", proves: false });

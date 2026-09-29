@@ -281,13 +281,19 @@
     if (!more) {
       return { status: "failed", message: "Couldn't find X's 'more' menu on this tweet." };
     }
+    const existingMenus = new Set(all("[role='menu']"));
     more.click();
 
-    // 3) Find the Block menu item (X-specific testid first, text as fallback).
+    // 3) Find the Block menu item, only inside a menu opened by this click
+    // (X-specific testid first, text as fallback). A stale or unrelated menu
+    // could otherwise target a different account.
     const menuItem = await waitFor(() => {
-      const byTestId = first("[data-testid='blockUser']");
+      const menus = all("[role='menu']").filter((menu) => !existingMenus.has(menu) && isVisible(menu));
+      if (menus.length !== 1) return null;
+      const menu = menus[0];
+      const byTestId = first("[data-testid='blockUser']", menu);
       if (byTestId && isVisible(byTestId)) return byTestId;
-      const items = all("[role='menuitem']");
+      const items = all("[role='menuitem']", menu);
       const byText = items.find((item) => {
         const text = (item.textContent || "").replace(/[^\p{L}\p{N}@ ]/gu, " ").replace(/\s+/g, " ").trim();
         return /^block\b/i.test(text);
@@ -298,7 +304,7 @@
       pressEscape();
       return { status: "failed", message: "X's Block menu item never appeared. Nothing was blocked." };
     }
-    // 4) Safety: the menu item must be near/within a menu opened for this tweet.
+    // 4) Safety: the menu may have closed between lookup and click.
     if (!isVisible(menuItem)) {
       return { status: "failed", message: "Menu state changed. Nothing was blocked." };
     }

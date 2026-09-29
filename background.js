@@ -63,7 +63,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 // Content script pushes state changes (e.g. after a full reload, mode is off).
 chrome.runtime.onMessage.addListener((message, sender) => {
   if (message && message.type === "xqb:setBadge") {
-    if (sender.tab && sender.tab.id != null) {
+    if (sender.id === chrome.runtime.id && sender.tab && sender.tab.id != null && isSupportedTab({ url: sender.url })) {
       setBadge(sender.tab.id, Boolean(message.active));
     }
   }

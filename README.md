@@ -57,16 +57,40 @@ There is no bulk blocking or automatic spam detection.
 <details>
 <summary>Development</summary>
 
-Use Node.js 22.12+ in the 22.x line, or another jsdom-compatible release.
+Read [the security baseline](.github/copilot-instructions.md) first.
+Use a maintained jsdom-compatible Node.js release (22.13+ in the 22.x line,
+or 24+) and **npm 11.21.2**. The package-manager version is pinned and checked;
+older npm versions may not enforce release age.
+
+Run these commands **inside a disposable VM or restricted non-root container**,
+not on the host. Copy only this project's inputs, without browser profiles,
+credentials, host-home mounts, or a Docker socket. Scrub inherited secrets and
+restrict outbound traffic to the npm registry during installs; tests and
+packaging need no network access.
 
 ```sh
-npm ci
+npm ci --ignore-scripts
+npm audit
 npm test
 npm run package
 ```
 
+Installs block dependency lifecycle scripts. npm enforces a seven-day minimum
+release age when resolving updates; **`npm ci` trusts the existing lockfile and
+does not recheck release age**. Review publication dates as well as versions in
+lockfile changes before accepting them. Dependabot uses the same cooldown for
+routine updates; its security updates bypass the bot cooldown, not npm's
+resolution gate. If an urgent verified fix needs an age exception, obtain
+approval for the exact package/version, reason, scope, and expiry/review date;
+pin the fix, remove temporary exemptions, and rerun validation. Do not use
+`--force` or disable security gates to silence findings.
+
 Packaging requires `zip` and `unzip` and writes the release ZIP and checksum
-to `dist/`. Tests use a simulated X page; live testing needs consented accounts.
+to `dist/`. Only the allowlisted runtime files, icons, and license are shipped;
+jsdom and its dependencies are test-only and excluded. Tests use a simulated
+X page; live testing needs consented accounts in an isolated browser profile,
+not an everyday signed-in browser. There are no app credentials, server ports,
+or persistent storage to configure.
 
 </details>
 
